@@ -91,7 +91,7 @@ namespace Actio.Common.Services
           .UseConfiguration(config)
           .UseStartup<TStartup>();
 
-      return HostBuilder(webHostBuilder.Build());
+      return new HostBuilder(webHostBuilder.Build());
     }
   }
 }
