@@ -3,15 +3,15 @@ using Actio.Common.Services;
 
 namespace Actio.Services.Activities
 {
-    public class Program
+  public class Program
+  {
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            ServiceHost.Create<Startup>(args)
-            .UseRabbitMq()
-            .SubscribeToCommand<CreateActivity>()
-            .Build()
-            .Run();
-        }
+      ServiceHost.Create<Startup>(args)
+      .UseRabbitMq()
+      .SubscribeToCommand<CreateActivity>()
+      .Build()
+      .Run();
     }
+  }
 }

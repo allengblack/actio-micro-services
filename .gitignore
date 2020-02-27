@@ -348,3 +348,7 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+src/Actio.Services.Activities/appsettings.json
+src/Actio.Services.Activities/appsettings.Development.json
+src/Actio.Api/appsettings.Development.json
+src/Actio.Api/appsettings.json

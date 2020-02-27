@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using Actio.Common.Commands;
@@ -26,17 +27,28 @@ namespace Actio.Common.RabbitMq
 
     private static string GetQueueName<T>()
     {
-        return $"{Assembly.GetEntryAssembly().GetName()}/{typeof(T).Name}";
+      return $"{Assembly.GetEntryAssembly().GetName()}/{typeof(T).Name}";
     }
 
     public static void AddRabbitMq(this IServiceCollection services, IConfiguration configuration)
     {
-        var options = new RabbitMqOptions();
-        var section = configuration?.GetSection("RabbitMq");
-        section.Bind(options);
+      if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-        var client = RawRabbitFactory.CreateSingleton(new RawRabbitOptions { ClientConfiguration = options });
+      var options = new RabbitMqOptions();
+      var section = configuration.GetSection("RabbitMq");
+      section.Bind(options);
+
+      using (var client = RawRabbitFactory.CreateSingleton(new RawRabbitOptions
+      {
+        ClientConfiguration = options,
+        DependencyInjection = ioc => ioc.AddSingleton(LoggingFactory.ApplicationLogger),
+        Plugins = p => p
+          .UseStateMachine()
+          .UseGlobalExecutionId()
+      }))
+      {
         services.AddSingleton<IBusClient>(_ => client);
+      }
     }
   }
 }
